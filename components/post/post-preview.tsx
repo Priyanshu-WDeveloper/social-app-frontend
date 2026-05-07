@@ -5,7 +5,7 @@ import { Heart, MessageCircle, Share2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Avatar from '@/components/ui/avatar';
 import Card from '@/components/ui/card';
-import { usePostStore } from '@/store/use-post-store';
+import { usePostStore } from '@/store/post-store';
 
 export default function PostPreview() {
   const draft = usePostStore((state) => state.draft);

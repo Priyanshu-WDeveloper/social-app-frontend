@@ -3,6 +3,7 @@ import {
   SignupPayload,
   UserProfile,
 } from '@/types/auth';
+import { axiosInstance } from '../lib/axios';
 
 const fakeProfile: UserProfile = {
   id: 'user-01',
@@ -12,33 +13,38 @@ const fakeProfile: UserProfile = {
 };
 
 export async function login(payload: AuthCredentials) {
-  await new Promise((resolve) => setTimeout(resolve, 600));
+  const res = await axiosInstance.post('/api/auth/login', {
+    identifier: payload.identifier,
+    password: payload.password,
+  });
 
-  if (payload.password.length < 8) {
-    throw new Error('Invalid credentials');
-  }
-
-  return { user: fakeProfile, token: 'mock-session-token' };
+  return res.data;
 }
 
 export async function signup(payload: SignupPayload) {
-  await new Promise((resolve) => setTimeout(resolve, 700));
-  return {
-    user: {
-      ...fakeProfile,
-      name: payload.fullName,
-      username: payload.username,
-    },
-    token: 'mock-session-token',
-  };
+  const res = await axiosInstance.post('/api/auth/register', {
+    email: payload.email,
+    password: payload.password,
+    fullName: payload.fullName,
+    username: payload.username,
+  });
+
+  return res.data;
 }
 
 export async function sendResetLink(email: string) {
-  await new Promise((resolve) => setTimeout(resolve, 600));
-  return { success: true, message: `Reset link sent to ${email}` };
+  const res = await axiosInstance.post('/api/auth/forgot-password', {
+    email,
+  });
+
+  return res.data;
 }
 
-export async function resetPassword(token: string, password: string) {
-  await new Promise((resolve) => setTimeout(resolve, 700));
-  return { success: true, message: 'Password updated successfully' };
+// export async function resetPassword(token: string, password: string) {
+export async function resetPassword(password: string) {
+  const res = await axiosInstance.post('/api/auth/reset-password', {
+    password,
+  });
+
+  return res.data;
 }

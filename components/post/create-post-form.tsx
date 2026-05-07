@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
-import { usePostStore } from '@/store/use-post-store';
+import { usePostStore } from '@/store/post-store';
 import {
   mockUploadMedia,
   publishPost,

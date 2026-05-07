@@ -2,6 +2,10 @@ import type { Metadata } from 'next';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from 'sonner';
 import './globals.css';
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: 'Social Media Dashboard',
@@ -15,11 +19,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen bg-slate-950 text-slate-100 antialiased">
+    <html lang="en" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
+      <body className="min-h-screen text-slate-100 antialiased">
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="light"
           enableSystem={false}
         >
           {children}

@@ -14,6 +14,11 @@ import { Label } from '@/components/ui/label';
 import { loginSchema } from '@/lib/validations';
 import { login } from '@/services/auth-service';
 import type { AuthCredentials } from '@/types/auth';
+import {
+  AppleIcon,
+  FacebookIcon,
+  GoogleIcon,
+} from '../ui/oauth_icons';
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -43,26 +48,22 @@ export default function LoginForm() {
 
   return (
     <AuthShell>
-      <div className="space-y-6 rounded-3xl bg-slate-900/90 p-8 shadow-soft">
+      <div className="space-y-6 rounded-3xl  p-8 shadow-soft">
         <div className="space-y-2">
-          <p className="text-sm uppercase tracking-[0.24em] text-violet-300">
-            Sign in
-          </p>
-          <h1 className="text-3xl font-semibold text-white">
-            Login to your account
+          <h1 className="text-3xl font-semibold text-black">
+            Welcome Back!
           </h1>
-          <p className="text-slate-400">
-            Enter your credentials or continue with a social account.
+          <p className="text-slate-400 ">
+            Login to continue your account.
           </p>
         </div>
 
         <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
           <div>
-            <Label htmlFor="identifier">Email or username</Label>
             <Input
               id="identifier"
               type="text"
-              placeholder="you@example.com"
+              placeholder="Email or username"
               {...register('identifier')}
             />
             {errors.identifier && (
@@ -73,20 +74,11 @@ export default function LoginForm() {
           </div>
 
           <div>
-            <div className="flex items-center justify-between gap-4">
-              <Label htmlFor="password">Password</Label>
-              <Link
-                href="/forgot-password"
-                className="text-sm text-violet-300 hover:text-violet-200"
-              >
-                Forgot password?
-              </Link>
-            </div>
             <div className="relative">
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
-                placeholder="Your password"
+                placeholder="Password"
                 {...register('password')}
               />
               <button
@@ -107,6 +99,14 @@ export default function LoginForm() {
               </p>
             )}
           </div>
+          <div className="flex justify-end">
+            <Link
+              href="/forgot-password"
+              className="text-sm font-semibold text-violet-500 hover:text-violet-200"
+            >
+              Forgot password?
+            </Link>
+          </div>
 
           <Button
             type="submit"
@@ -122,25 +122,39 @@ export default function LoginForm() {
             or continue with
           </p>
           <div className="grid gap-3 sm:grid-cols-3">
-            <Button type="button" variant="outline" className="gap-2">
-              <Globe className="h-4 w-4" /> Google
+            <Button
+              type="button"
+              variant="outline"
+              className="h-12 rounded-xl border-slate-200 bg-white hover:bg-slate-50"
+            >
+              <GoogleIcon />
             </Button>
-            <Button type="button" variant="outline" className="gap-2">
-              <Apple className="h-4 w-4" /> Apple
+
+            <Button
+              type="button"
+              variant="outline"
+              className="h-12 rounded-xl border-slate-200 bg-white hover:bg-slate-50"
+            >
+              <AppleIcon />
             </Button>
-            <Button type="button" variant="outline" className="gap-2">
-              <Facebook className="h-4 w-4" /> Facebook
+
+            <Button
+              type="button"
+              variant="outline"
+              className="h-12 rounded-xl border-slate-200 bg-white hover:bg-slate-50"
+            >
+              <FacebookIcon />
             </Button>
           </div>
         </div>
 
-        <p className="text-center text-sm text-slate-400">
+        <p className="text-center text-sm font-semibold text-slate-400">
           Don’t have an account?{' '}
           <Link
             href="/signup"
-            className="font-semibold text-violet-300 hover:text-violet-200"
+            className="font-semibold text-violet-500 hover:text-violet-200"
           >
-            Create one
+            Sign up
           </Link>
         </p>
       </div>

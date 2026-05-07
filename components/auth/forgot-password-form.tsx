@@ -42,12 +42,9 @@ export default function ForgotPasswordForm() {
 
   return (
     <AuthShell>
-      <div className="space-y-6 rounded-3xl bg-slate-900/90 p-8 shadow-soft">
-        <div className="space-y-2">
-          <p className="text-sm uppercase tracking-[0.24em] text-violet-300">
-            Forgot password
-          </p>
-          <h1 className="text-3xl font-semibold text-white">
+      <div className="space-y-6 rounded-3xl p-8 py-16 shadow-soft">
+        <div className="space-y-2 mb-[70px]">
+          <h1 className="text-3xl font-semibold text-black text-center">
             Reset your password
           </h1>
           <p className="text-slate-400">
@@ -56,13 +53,15 @@ export default function ForgotPasswordForm() {
           </p>
         </div>
 
-        <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="space-y-7 "
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div>
-            <Label htmlFor="email">Email</Label>
             <Input
               id="email"
               type="email"
-              placeholder="you@example.com"
+              placeholder="Email"
               {...register('email')}
             />
             {errors.email && (
@@ -81,11 +80,11 @@ export default function ForgotPasswordForm() {
           </Button>
         </form>
 
-        <p className="text-center text-sm text-slate-400">
+        <p className="text-center text-sm pt-12 text-slate-400">
           Remembered your password?{' '}
           <Link
             href="/"
-            className="font-semibold text-violet-300 hover:text-violet-200"
+            className="font-semibold text-violet-500 hover:text-violet-200"
           >
             Log in
           </Link>

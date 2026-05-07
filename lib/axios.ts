@@ -8,3 +8,9 @@ const api = axios.create({
 });
 
 export default api;
+
+export const axiosInstance = axios.create({
+  baseURL: 'http://localhost:5000',
+
+  withCredentials: true,
+});

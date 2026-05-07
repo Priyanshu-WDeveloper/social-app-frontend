@@ -44,7 +44,8 @@ export default function ResetPasswordForm() {
   async function onSubmit(values: FormValues) {
     setIsSubmitting(true);
     try {
-      await resetPassword('mock-token', values.password);
+      await resetPassword(values.password);
+      // await resetPassword('mock-token', values.password);
       toast.success('Password updated. Redirecting to login.');
       router.push('/');
     } catch (error) {
@@ -56,22 +57,26 @@ export default function ResetPasswordForm() {
 
   return (
     <AuthShell>
-      <div className="space-y-6 rounded-3xl bg-slate-900/90 p-8 shadow-soft">
-        <div className="space-y-2">
-          <p className="text-sm uppercase tracking-[0.24em] text-violet-300">
-            Reset password
-          </p>
-          <h1 className="text-3xl font-semibold text-white">
-            Create a new password
+      <div className="space-y-6 rounded-3xl py-16 p-8 shadow-soft">
+        <div className="space-y-2 text-center mb-[50px] w-72 mx-auto">
+          <h1 className="text-3xl font-semibold text-black">
+            Set a new password
           </h1>
           <p className="text-slate-400">
-            Choose a strong password to keep your account secure.
+            Your new password must be different from previously used
+            passwords.
           </p>
         </div>
 
         <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
           <div>
-            <Label htmlFor="password">New password</Label>
+            <div className="flex items-center justify-end gap-4 pb-2">
+              {password.length > 0 && (
+                <span className="text-sm text-slate-500">
+                  Strength: {passwordStrength}
+                </span>
+              )}
+            </div>
             <div className="relative">
               <Input
                 id="password"
@@ -99,18 +104,10 @@ export default function ResetPasswordForm() {
           </div>
 
           <div>
-            <div className="flex items-center justify-between gap-4">
-              <Label htmlFor="confirmPassword">
-                Confirm password
-              </Label>
-              <span className="text-sm text-slate-500">
-                Strength: {passwordStrength}
-              </span>
-            </div>
             <Input
               id="confirmPassword"
               type="password"
-              placeholder="Repeat password"
+              placeholder="Confirm new password"
               {...register('confirmPassword')}
             />
             {errors.confirmPassword && (
@@ -125,15 +122,15 @@ export default function ResetPasswordForm() {
             disabled={isSubmitting}
             className="w-full"
           >
-            {isSubmitting ? 'Updating password…' : 'Save password'}
+            {isSubmitting ? 'Updating password…' : 'Update password'}
           </Button>
         </form>
 
-        <p className="text-center text-sm text-slate-400">
+        <p className="text-center text-sm pt-12 text-slate-400">
           Back to{' '}
           <Link
             href="/"
-            className="font-semibold text-violet-300 hover:text-violet-200"
+            className="font-semibold text-violet-500 hover:text-violet-200"
           >
             Login
           </Link>

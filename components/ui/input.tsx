@@ -10,7 +10,11 @@ export function Input(
   return (
     <input
       className={clsx(
-        'w-full rounded-2xl border border-slate-800 bg-slate-950/70 px-4 py-3 text-sm text-slate-100 shadow-sm outline-none transition focus:border-violet-400 focus:ring-2 focus:ring-violet-400/20 placeholder:text-slate-500',
+        'h-12 w-full rounded-xl border border-[#E5E7EB] bg-white px-4 text-sm font-medium text-[#111827]',
+        'placeholder:font-medium placeholder:text-[#00000069]',
+        'shadow-[0_1px_2px_rgba(0,0,0,0.04)]',
+        'transition-all duration-200',
+        'focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10 focus:outline-none',
         props.className,
       )}
       {...props}

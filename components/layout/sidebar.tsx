@@ -11,6 +11,7 @@ import {
   User,
   Plus,
 } from 'lucide-react';
+import CreatePostDialog from '../post/create-post-dialog';
 
 const navItems = [
   { href: '/dashboard', label: 'Home', icon: Home },
@@ -43,12 +44,12 @@ export default function Sidebar() {
           S
         </div>
         <div>
-          <p className="text-sm uppercase tracking-[0.25em] text-slate-400">
-            Social
-          </p>
-          <p className="text-xl font-semibold text-white">
-            Dashboard
-          </p>
+          <h1 className="text-xl font-semibold text-slate-400">
+            Siclail{' '}
+            <span className="text-xl font-semibold text-violet-500">
+              Media
+            </span>
+          </h1>
         </div>
       </div>
       <nav className="space-y-2">
@@ -71,10 +72,8 @@ export default function Sidebar() {
           );
         })}
       </nav>
-      <button className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-3xl bg-gradient-to-r from-violet-500 to-fuchsia-500 px-4 py-3 text-sm font-semibold text-white shadow-glow transition hover:opacity-95">
-        <Plus className="h-4 w-4" />
-        Create post
-      </button>
+
+      <CreatePostDialog />
     </aside>
   );
 }
