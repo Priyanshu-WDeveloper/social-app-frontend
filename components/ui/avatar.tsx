@@ -19,13 +19,20 @@ export default function Avatar({
       className={`relative overflow-hidden rounded-full bg-slate-800 ${className}`}
       style={{ width: size, height: size }}
     >
-      <Image
+      {/* <Image
         src={src}
         alt={alt}
         fill
         sizes="56px"
         className="object-cover"
-      />
+      /> */}
+      {src ? (
+        <img
+          src={src}
+          alt={alt}
+          className="h-full w-full object-cover"
+        />
+      ) : null}
     </div>
   );
 }

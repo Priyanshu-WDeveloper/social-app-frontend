@@ -15,13 +15,20 @@ export default function MediaGrid() {
           key={index}
           className="relative overflow-hidden rounded-3xl"
         >
-          <Image
+          {/* <Image
             src={item}
             alt="media"
             width={500}
             height={500}
             className="h-[250px] w-full object-cover"
-          />
+          /> */}
+          {item ? (
+            <img
+              src={item.url}
+              alt="media"
+              className="h-[250px] w-full object-cover"
+            />
+          ) : null}
 
           <button
             onClick={() => removeMedia(index)}

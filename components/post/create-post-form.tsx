@@ -38,9 +38,26 @@ type FormValues = {
 const gifOptions = ['Cozy', 'Celebrate', 'Dream'];
 
 export default function CreatePostForm() {
-  const draft = usePostStore((state) => state.draft);
-  const setDraft = usePostStore((state) => state.setDraft);
-  const resetDraft = usePostStore((state) => state.resetDraft);
+  const {
+    content,
+    audience,
+    feeling,
+    location,
+    pollQuestion,
+    scheduledAt,
+    media,
+
+    setContent,
+    setAudience,
+    setFeeling,
+    setLocation,
+    setPollQuestion,
+    setScheduledAt,
+
+    addMedia,
+    removeMedia,
+    resetPost,
+  } = usePostStore();
   const [selectedGif, setSelectedGif] = useState<string>(
     gifOptions[0],
   );
@@ -56,25 +73,25 @@ export default function CreatePostForm() {
   } = useForm<FormValues>({
     resolver: zodResolver(postSchema),
     defaultValues: {
-      content: draft.content,
-      audience: draft.audience,
-      feeling: draft.feeling,
-      location: draft.location,
-      pollQuestion: draft.pollQuestion,
-      scheduledAt: draft.scheduledAt ?? '',
+      content: content,
+      audience: audience,
+      feeling: feeling,
+      location: location,
+      pollQuestion: pollQuestion,
+      scheduledAt: scheduledAt ?? '',
     },
   });
 
-  const content = watch('content');
+  const watchedContent = watch('content');
 
-  const charCount = content?.length ?? 0;
+  const charCount = watchedContent?.length ?? 0;
   const remaining = 280 - charCount;
 
   const audienceTag = useMemo(() => {
-    if (draft.audience === 'private') return 'Private';
-    if (draft.audience === 'friends') return 'Friends';
+    if (audience === 'private') return 'Private';
+    if (audience === 'friends') return 'Friends';
     return 'Public';
-  }, [draft.audience]);
+  }, [audience]);
 
   function handleFiles(files: FileList | null) {
     if (!files) return;
@@ -84,7 +101,7 @@ export default function CreatePostForm() {
       .forEach(async (file, index) => {
         try {
           const asset = await mockUploadMedia(file);
-          setDraft({ media: [...draft.media, asset] });
+          addMedia(asset);
           if (index === files.length - 1) {
             toast.success('Media uploaded');
           }
@@ -98,11 +115,20 @@ export default function CreatePostForm() {
 
   async function onSubmit(values: FormValues) {
     setPublishing(true);
-    setDraft({ ...values, isDraft: false });
+    // setDraft({ ...values, isDraft: false });
     try {
-      await publishPost({ ...draft, ...values, isDraft: false });
+      await publishPost({
+        content,
+        audience,
+        feeling,
+        location,
+        pollQuestion,
+        scheduledAt,
+        media,
+        isDraft: false,
+      });
       toast.success('Post published successfully.');
-      resetDraft();
+      resetPost();
     } catch {
       toast.error('Unable to publish post.');
     } finally {
@@ -129,10 +155,8 @@ export default function CreatePostForm() {
             id="content"
             placeholder="Write a post, share a thought, or update the community…"
             {...register('content')}
-            onChange={(event) =>
-              setDraft({ content: event.target.value })
-            }
-            value={draft.content}
+            onChange={(event) => setContent(event.target.value)}
+            value={content}
           />
           <div className="flex items-center justify-between text-sm text-slate-400">
             <span>{remaining} characters remaining</span>
@@ -152,10 +176,8 @@ export default function CreatePostForm() {
               id="feeling"
               placeholder="Feeling excited"
               {...register('feeling')}
-              onChange={(event) =>
-                setDraft({ feeling: event.target.value })
-              }
-              value={draft.feeling}
+              onChange={(event) => setFeeling(event.target.value)}
+              value={feeling}
             />
           </div>
           <div>
@@ -164,10 +186,8 @@ export default function CreatePostForm() {
               id="location"
               placeholder="Remote, Home, City"
               {...register('location')}
-              onChange={(event) =>
-                setDraft({ location: event.target.value })
-              }
-              value={draft.location}
+              onChange={(event) => setLocation(event.target.value)}
+              value={location}
             />
           </div>
         </div>
@@ -180,9 +200,9 @@ export default function CreatePostForm() {
               placeholder="Ask a question to your audience"
               {...register('pollQuestion')}
               onChange={(event) =>
-                setDraft({ pollQuestion: event.target.value })
+                setPollQuestion(event.target.value)
               }
-              value={draft.pollQuestion}
+              value={pollQuestion}
             />
           </div>
           <div>
@@ -192,14 +212,14 @@ export default function CreatePostForm() {
                 id="audience"
                 className="w-full appearance-none rounded-2xl border border-slate-800 bg-slate-950/70 px-4 py-3 pr-10 text-slate-100 outline-none transition focus:border-violet-400 focus:ring-2 focus:ring-violet-400/20"
                 {...register('audience')}
-                value={draft.audience}
+                value={audience}
                 onChange={(event) =>
-                  setDraft({
-                    audience: event.target.value as
+                  setAudience(
+                    event.target.value as
                       | 'public'
                       | 'friends'
                       | 'private',
-                  })
+                  )
                 }
               >
                 <option value="public">Public</option>
@@ -239,9 +259,9 @@ export default function CreatePostForm() {
               Drop images or video here, or browse files to upload.
             </p>
           </div>
-          {draft.media.length > 0 ? (
+          {media.length > 0 ? (
             <div className="grid gap-3 sm:grid-cols-2">
-              {draft.media.map((asset) => (
+              {media.map((asset) => (
                 <div
                   key={asset.id}
                   className="group relative overflow-hidden rounded-3xl border border-white/10 bg-slate-900/80"
@@ -261,13 +281,7 @@ export default function CreatePostForm() {
                   )}
                   <button
                     type="button"
-                    onClick={() =>
-                      setDraft({
-                        media: draft.media.filter(
-                          (item) => item.id !== asset.id,
-                        ),
-                      })
-                    }
+                    onClick={() => removeMedia(asset.id)}
                     className="absolute right-3 top-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-950/90 text-slate-200 transition hover:bg-white/10"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -313,10 +327,8 @@ export default function CreatePostForm() {
               id="scheduledAt"
               type="datetime-local"
               {...register('scheduledAt')}
-              onChange={(event) =>
-                setDraft({ scheduledAt: event.target.value })
-              }
-              value={draft.scheduledAt ?? ''}
+              onChange={(event) => setScheduledAt(event.target.value)}
+              value={scheduledAt ?? ''}
             />
           </div>
           <div className="flex items-end justify-end">
@@ -324,7 +336,7 @@ export default function CreatePostForm() {
               type="button"
               variant="outline"
               className="w-full"
-              onClick={() => resetDraft()}
+              onClick={() => resetPost()}
             >
               Save draft
             </Button>
@@ -333,10 +345,8 @@ export default function CreatePostForm() {
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="text-sm text-slate-400">
-            Feeling{' '}
-            <span className="text-white">{draft.feeling}</span> ·
-            Location{' '}
-            <span className="text-white">{draft.location}</span>
+            Feeling <span className="text-white">{feeling}</span> ·
+            Location <span className="text-white">{location}</span>
           </div>
           <Button
             type="submit"
