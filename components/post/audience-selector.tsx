@@ -4,17 +4,20 @@ import { Globe, Users, Lock } from 'lucide-react';
 
 import { usePostStore } from '@/store/post-store';
 
-const audiences = [
+const audienceOptions: {
+  label: 'public' | 'friends' | 'private';
+  icon: typeof Globe;
+}[] = [
   {
-    label: 'Public',
+    label: 'public',
     icon: Globe,
   },
   {
-    label: 'Friends',
+    label: 'friends',
     icon: Users,
   },
   {
-    label: 'Private',
+    label: 'private',
     icon: Lock,
   },
 ];
@@ -29,7 +32,7 @@ export default function AudienceSelector() {
       </p>
 
       <div className="flex flex-wrap gap-3">
-        {audiences.map((item) => {
+        {audienceOptions.map((item) => {
           const Icon = item.icon;
 
           const active = audience === item.label;
