@@ -10,9 +10,9 @@ export default function MediaGrid() {
 
   return (
     <div className="grid grid-cols-2 gap-4">
-      {media.map((item, index) => (
+      {media.map((item) => (
         <div
-          key={index}
+          key={item.id}
           className="relative overflow-hidden rounded-3xl"
         >
           {/* <Image
@@ -31,7 +31,7 @@ export default function MediaGrid() {
           ) : null}
 
           <button
-            onClick={() => removeMedia(index)}
+            onClick={() => removeMedia(item.id)}
             className="absolute right-3 top-3 rounded-full bg-black/50 p-2 text-white backdrop-blur"
           >
             <X className="h-4 w-4" />

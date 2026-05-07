@@ -59,7 +59,7 @@ export default function PreviewStep() {
               {media.map((item, index) => (
                 <img
                   key={index}
-                  src={item}
+                  src={item.url}
                   alt="media"
                   className="h-[260px] w-full object-cover"
                 />

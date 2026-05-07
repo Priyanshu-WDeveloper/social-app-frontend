@@ -18,9 +18,11 @@ export default function MediaUploadStep() {
   const { media, addMedia, setStep } = usePostStore();
 
   const handleMockUpload = () => {
-    addMedia(
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
-    );
+    addMedia({
+      id: Date.now().toString(),
+      url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+      type: 'image',
+    });
   };
 
   return (

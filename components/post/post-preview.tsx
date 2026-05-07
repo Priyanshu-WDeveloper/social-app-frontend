@@ -8,16 +8,16 @@ import Card from '@/components/ui/card';
 import { usePostStore } from '@/store/post-store';
 
 export default function PostPreview() {
-  const draft = usePostStore((state) => state.draft);
-
+  const { content, audience, media, feeling, location } =
+    usePostStore();
   const counts = useMemo(() => {
-    const base = draft.content.length + draft.media.length * 34;
+    const base = content.length + media.length * 34;
     return {
       likes: Math.max(12, Math.min(420, Math.round(base * 0.7))),
       comments: Math.max(2, Math.min(78, Math.round(base * 0.2))),
       shares: Math.max(1, Math.min(32, Math.round(base * 0.1))),
     };
-  }, [draft.content, draft.media.length]);
+  }, [content, media.length]);
 
   return (
     <motion.div
@@ -34,18 +34,18 @@ export default function PostPreview() {
               Avery Quinn
             </p>
             <p className="text-sm text-slate-400">
-              @averyq · {draft.audience}
+              @averyq · {audience}
             </p>
           </div>
         </div>
         <p className="mt-5 whitespace-pre-line text-slate-100">
-          {draft.content ||
+          {content ||
             'Start typing to preview your post content in real time.'}
         </p>
 
-        {draft.media.length > 0 && (
+        {media.length > 0 && (
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            {draft.media.map((media) => (
+            {media.map((media) => (
               <div
                 key={media.id}
                 className="overflow-hidden rounded-3xl border border-white/10 bg-slate-950/80"
@@ -109,13 +109,13 @@ export default function PostPreview() {
           <div className="rounded-3xl bg-slate-900/90 p-4">
             <p className="text-sm text-slate-400">Mood</p>
             <p className="mt-2 text-white">
-              {draft.feeling || 'None selected'}
+              {feeling || 'None selected'}
             </p>
           </div>
           <div className="rounded-3xl bg-slate-900/90 p-4">
             <p className="text-sm text-slate-400">Location</p>
             <p className="mt-2 text-white">
-              {draft.location || 'None selected'}
+              {location || 'None selected'}
             </p>
           </div>
         </div>
