@@ -1,4 +1,5 @@
 import { MediaAsset, PostDraft, PostPreview } from '@/types/post';
+import { axiosInstance } from '../lib/axios';
 
 const previewTemplate: PostPreview = {
   id: 'post-001',
@@ -16,7 +17,10 @@ const previewTemplate: PostPreview = {
   shares: 12,
   createdAt: 'Just now',
 };
-
+type PostDraftM = {
+  content: string;
+  media: MediaAsset[];
+};
 export async function fetchDraft() {
   await new Promise((resolve) => setTimeout(resolve, 400));
   return {
@@ -33,17 +37,20 @@ export async function fetchDraft() {
   };
 }
 
-export async function publishPost(draft: PostDraft) {
-  await new Promise((resolve) => setTimeout(resolve, 900));
-  return {
-    post: {
-      ...previewTemplate,
-      content: draft.content || previewTemplate.content,
-      media: draft.media,
-      audience: draft.audience,
-      createdAt: 'Moments ago',
-    },
-  };
+// export async function publishPost(draft: PostDraft) {
+export async function publishPost(draft: PostDraftM) {
+  const res = await axiosInstance.post('/api/posts/upload', {
+    content: draft.content,
+    media: draft.media,
+  });
+
+  return res.data;
+}
+
+export async function getPosts() {
+  const res = await axiosInstance.get('/api/posts');
+
+  return res.data;
 }
 
 export function mockUploadMedia(file: File): Promise<MediaAsset> {

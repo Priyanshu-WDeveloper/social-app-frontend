@@ -1,59 +1,160 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import { motion } from 'framer-motion';
-import { Sparkles } from 'lucide-react';
-import Card from '@/components/ui/card';
+
+import {
+  Heart,
+  MessageCircle,
+  MoreHorizontal,
+  Share2,
+} from 'lucide-react';
+import { getPosts } from '../../services/post-service';
 
 export default function DashboardHomePage() {
-  return (
-    <div className="space-y-6 p-6">
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45 }}
-      >
-        <Card className="p-6 bg-slate-900/80">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm uppercase tracking-[0.2em] text-violet-300">
-                Home
-              </p>
-              <h1 className="mt-2 text-3xl font-semibold text-white">
-                Welcome back, Avery.
-              </h1>
-              <p className="mt-2 text-slate-400 max-w-2xl">
-                Create beautiful posts, preview activity, and keep
-                your feed polished with live updates.
-              </p>
-            </div>
-            <div className="inline-flex items-center gap-2 rounded-3xl bg-violet-500/10 px-4 py-3 text-violet-200 shadow-soft">
-              <Sparkles className="h-5 w-5" />
-              Trending in feed
-            </div>
-          </div>
-        </Card>
-      </motion.div>
+  const [posts, setPosts] = useState<any[]>([]);
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="p-6 bg-slate-900/90">
-          <h2 className="text-xl font-semibold text-white">
-            Quick actions
-          </h2>
-          <p className="mt-3 text-slate-400">
-            Jump into a new post, review drafts, or check your
-            mentions.
-          </p>
-        </Card>
-        <Card className="p-6 bg-slate-900/90">
-          <h2 className="text-xl font-semibold text-white">
-            Workspace overview
-          </h2>
-          <p className="mt-3 text-slate-400">
-            Your social dashboard stays responsive across mobile,
-            desktop and tablet.
-          </p>
-        </Card>
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const data = await getPosts();
+
+        setPosts(data.posts || []);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  return (
+    <div className="mx-auto max-w-2xl space-y-6 bg-slate-50 p-6">
+      <div>
+        <h1 className="text-3xl font-bold text-slate-900">Feed</h1>
+
+        <p className="mt-2 text-slate-500">Latest community posts</p>
       </div>
+
+      {loading ? (
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 text-slate-500 shadow-sm">
+          Loading posts...
+        </div>
+      ) : posts.length === 0 ? (
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 text-slate-500 shadow-sm">
+          No posts found.
+        </div>
+      ) : (
+        posts.map((post) => (
+          <motion.div
+            key={post._id}
+            initial={{
+              opacity: 0,
+              y: 10,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+          >
+            {/* Header */}
+            <div className="flex items-start justify-between p-5">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-violet-100 text-sm font-semibold text-violet-700">
+                  {post.user?.fullName?.[0] || 'U'}
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-slate-900">
+                    {post.user?.fullName}
+                  </h3>
+
+                  <div className="flex items-center gap-2 text-sm text-slate-500">
+                    <span>@{post.user?.username}</span>
+
+                    <span>•</span>
+
+                    <span>{post.visibility}</span>
+
+                    <span>•</span>
+
+                    <span>Just now</span>
+                  </div>
+                </div>
+              </div>
+
+              <button className="text-slate-400 transition hover:text-slate-700">
+                <MoreHorizontal className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Content */}
+            {post.content && (
+              <div className="px-5 pb-4">
+                <p className="whitespace-pre-wrap text-[15px] leading-7 text-slate-800">
+                  {post.content}
+                </p>
+              </div>
+            )}
+
+            {/* Media */}
+            {post.media?.length > 0 && (
+              <div className="space-y-1">
+                {post.media.map((item: any) => (
+                  <div key={item.id} className="overflow-hidden">
+                    {item.type === 'video' ? (
+                      <video
+                        src={item.url}
+                        controls
+                        className="max-h-[520px] w-full object-cover"
+                      />
+                    ) : (
+                      <img
+                        src={item.url}
+                        alt="post media"
+                        className="max-h-[520px] w-full object-cover"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="flex items-center justify-between border-t border-slate-200 px-5 py-4">
+              <button className="flex items-center gap-2 text-slate-500 transition hover:text-pink-500">
+                <Heart className="h-5 w-5" />
+
+                <span className="text-sm">
+                  {post.likesCount || 128}
+                </span>
+              </button>
+
+              <button className="flex items-center gap-2 text-slate-500 transition hover:text-blue-500">
+                <MessageCircle className="h-5 w-5" />
+
+                <span className="text-sm">
+                  {post.commentsCount || 32}
+                </span>
+              </button>
+
+              <button className="flex items-center gap-2 text-slate-500 transition hover:text-green-500">
+                <Share2 className="h-5 w-5" />
+
+                <span className="text-sm">
+                  {post.sharesCount || 20}
+                </span>
+              </button>
+            </div>
+          </motion.div>
+        ))
+      )}
     </div>
   );
 }

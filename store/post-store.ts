@@ -67,12 +67,23 @@
 
 import { create } from 'zustand';
 
-interface MediaItem {
+// interface MediaItem {
+//   id: string;
+//   url: string;
+//   type: 'image' | 'video' | 'gif';
+// }
+export interface MediaItem {
   id: string;
+  fileId: string;
   url: string;
+  thumbnailUrl?: string;
   type: 'image' | 'video' | 'gif';
+  width?: number;
+  height?: number;
+  size?: number;
+  mimeType?: string;
+  provider?: 'imagekit';
 }
-
 interface PostStore {
   open: boolean;
   step: number;

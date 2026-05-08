@@ -14,6 +14,31 @@ export type PostDraft = {
   media: MediaAsset[];
   isDraft: boolean;
 };
+export interface MediaItem {
+  id: string;
+  fileId: string;
+
+  url: string;
+
+  thumbnailUrl?: string;
+
+  type: 'image' | 'video' | 'gif';
+
+  width?: number;
+  height?: number;
+
+  size?: number;
+
+  mimeType?: string;
+
+  provider?: 'imagekit';
+}
+
+export interface PostDraftM {
+  content: string;
+
+  media: MediaItem[];
+}
 
 export type PostPreview = {
   id: string;

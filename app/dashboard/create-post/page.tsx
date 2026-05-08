@@ -1,5 +1,5 @@
-import CreatePostForm from '@/components/post/create-post-form';
-import PostPreview from '@/components/post/post-preview';
+// import CreatePostForm from '@/components/post/create-post-form';
+// import PostPreview from '@/components/post/post-preview';
 import Card from '@/components/ui/card';
 
 export default function CreatePostPage() {
@@ -20,7 +20,7 @@ export default function CreatePostPage() {
             </p>
           </div>
         </Card>
-        <CreatePostForm />
+        {/* <CreatePostForm /> */}
       </div>
       <div className="space-y-6">
         <Card className="p-6 bg-slate-900/90">
@@ -32,7 +32,7 @@ export default function CreatePostPage() {
             media.
           </p>
         </Card>
-        <PostPreview />
+        {/* <PostPreview /> */}
       </div>
     </div>
   );
