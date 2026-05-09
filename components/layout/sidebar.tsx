@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 
 import CreatePostDialog from '../post/create-post-dialog';
+import ProfileCard from '../ui/profile-card';
 
 const navItems = [
   {
@@ -96,7 +97,7 @@ export default function Sidebar() {
         </div>
 
         <div>
-          <h1 className="text-xl font-bold text-slate-900">
+          <h1 className="text-xl font-bold text-slate-300">
             Siclail <span className="text-violet-600">Media</span>
           </h1>
         </div>
@@ -128,7 +129,7 @@ export default function Sidebar() {
                 ${
                   active
                     ? 'bg-violet-100 text-violet-700'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                    : 'text-slate-300 hover:bg-slate-100 hover:text-slate-900'
                 }
               `}
             >
@@ -138,11 +139,14 @@ export default function Sidebar() {
             </Link>
           );
         })}
+        <div className="mt-auto pt-6">
+          <CreatePostDialog />
+        </div>{' '}
       </nav>
 
       {/* Bottom Action */}
       <div className="mt-auto pt-6">
-        <CreatePostDialog />
+        <ProfileCard />
       </div>
     </aside>
   );

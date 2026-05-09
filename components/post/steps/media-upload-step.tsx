@@ -12,49 +12,69 @@ export default function MediaUploadStep() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
 
-  const handleFiles = async (files: FileList | null) => {
+  // const handleFiles = async (files: FileList | null) => {
+  //   if (!files) return;
+
+  //   for (const file of Array.from(files)) {
+  //     try {
+  //       const formData = new FormData();
+  //       formData.append('file', file);
+
+  //       const { data } = await axiosInstance.post(
+  //         '/api/posts/img-upload',
+  //         formData,
+  //         { headers: { 'Content-Type': 'multipart/form-data' } },
+  //       );
+
+  //       if (!data.fileId || !data.url) {
+  //         throw new Error('Invalid upload response from server');
+  //       }
+
+  //       addMedia({
+  //         id: data.fileId,
+  //         fileId: data.fileId,
+  //         url: data.url,
+  //         thumbnailUrl: data.thumbnailUrl,
+  //         type: file.type.startsWith('video') ? 'video' : 'image',
+  //         width: data.width,
+  //         height: data.height,
+  //         size: data.size,
+  //         mimeType: file.type,
+  //         provider: 'imagekit',
+  //       });
+
+  //       setTimeout(() => {
+  //         previewRef.current?.scrollIntoView({
+  //           behavior: 'smooth',
+  //           block: 'start',
+  //         });
+  //       }, 100);
+  //     } catch (error) {
+  //       console.error('Upload failed:', error);
+  //     }
+  //   }
+  // };
+  const handleFiles = (files: FileList | null) => {
     if (!files) return;
 
     for (const file of Array.from(files)) {
-      try {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        const { data } = await axiosInstance.post(
-          '/api/posts/img-upload',
-          formData,
-          { headers: { 'Content-Type': 'multipart/form-data' } },
-        );
-
-        if (!data.fileId || !data.url) {
-          throw new Error('Invalid upload response from server');
-        }
-
-        addMedia({
-          id: data.fileId,
-          fileId: data.fileId,
-          url: data.url,
-          thumbnailUrl: data.thumbnailUrl,
-          type: file.type.startsWith('video') ? 'video' : 'image',
-          width: data.width,
-          height: data.height,
-          size: data.size,
-          mimeType: file.type,
-          provider: 'imagekit',
-        });
-
-        setTimeout(() => {
-          previewRef.current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-          });
-        }, 100);
-      } catch (error) {
-        console.error('Upload failed:', error);
-      }
+      addMedia({
+        id: crypto.randomUUID(),
+        file,
+        url: URL.createObjectURL(file),
+        type: file.type.startsWith('video') ? 'video' : 'image',
+        mimeType: file.type,
+        size: file.size,
+      });
     }
-  };
 
+    setTimeout(() => {
+      previewRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }, 100);
+  };
   return (
     <div className="flex h-[90vh] overflow-hidden min-h-0 flex-col bg-white">
       {/* Header */}

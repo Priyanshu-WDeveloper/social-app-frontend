@@ -7,20 +7,14 @@ export const loginSchema = z.object({
     .min(8, 'Password must be at least 8 characters'),
 });
 
-export const signupSchema = z
-  .object({
-    fullName: z.string().min(2, 'Add your full name'),
-    email: z.string().email('Enter a valid email'),
-    username: z.string().min(3, 'Choose a username'),
-    password: z
-      .string()
-      .min(8, 'Password must be at least 8 characters'),
-    confirmPassword: z.string().min(8, 'Confirm your password'),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ['confirmPassword'],
-    message: 'Passwords must match',
-  });
+export const signupSchema = z.object({
+  fullName: z.string().min(2, 'Add your full name'),
+  email: z.string().email('Enter a valid email'),
+  username: z.string().min(3, 'Choose a username'),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters'),
+});
 
 export const resetPasswordSchema = z
   .object({

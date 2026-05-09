@@ -7,6 +7,7 @@ import { Calendar, Clock, Send } from 'lucide-react';
 import { useState } from 'react';
 import { publishPost } from '../../../services/post-service';
 import { toast } from 'sonner';
+import { axiosInstance } from '../../../lib/axios';
 
 export default function PreviewStep() {
   const { content, media, setStep, resetPost } = usePostStore();
@@ -46,6 +47,57 @@ export default function PreviewStep() {
   //     setPublishing(false);
   //   }
   // };
+  // const handlePublish = async () => {
+  //   if (!content.trim() && media.length === 0) {
+  //     toast.error('Post must contain text or media.');
+
+  //     return;
+  //   }
+  //   z;
+  //   setPublishing(true);
+
+  //   try {
+  //     const payload = {
+  //       content: content.trim(),
+
+  //       media: media.map((item) => ({
+  //         id: item.id,
+  //         // fileId: item.fileId,
+  //         url: item.url,
+  //         thumbnailUrl: item.thumbnailUrl || '',
+  //         type: item.type,
+  //         width: item.width || null,
+  //         height: item.height || null,
+  //         size: item.size || 0,
+  //         mimeType: item.mimeType || '',
+  //         provider: 'imagekit',
+  //       })),
+  //     };
+
+  //     const res = await publishPost(payload.content, payload.media);
+
+  //     console.log(
+  //       '\n===================== 🟢 res =====================',
+  //     );
+
+  //     console.log(res);
+
+  //     console.log(
+  //       '=================================================\n',
+  //     );
+
+  //     toast.success('Post published successfully.');
+
+  //     resetPost();
+  //   } catch (error) {
+  //     console.error(error);
+
+  //     toast.error('Unable to publish post.');
+  //   } finally {
+  //     setPublishing(false);
+  //   }
+  // };
+
   const handlePublish = async () => {
     if (!content.trim() && media.length === 0) {
       toast.error('Post must contain text or media.');
@@ -56,34 +108,29 @@ export default function PreviewStep() {
     setPublishing(true);
 
     try {
-      const payload = {
-        content: content.trim(),
+      const formData = new FormData();
 
-        media: media.map((item) => ({
-          id: item.id,
-          fileId: item.fileId,
-          url: item.url,
-          thumbnailUrl: item.thumbnailUrl || '',
-          type: item.type,
-          width: item.width || null,
-          height: item.height || null,
-          size: item.size || 0,
-          mimeType: item.mimeType || '',
-          provider: 'imagekit',
-        })),
-      };
+      // text content
+      formData.append('content', content.trim());
 
-      const res = await publishPost(payload);
+      // media files
+      media.forEach((item) => {
+        if (item.file) {
+          formData.append('media', item.file);
+        }
+      });
 
-      console.log(
-        '\n===================== 🟢 res =====================',
+      const res = await axiosInstance.post(
+        '/api/posts/upload',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
       );
 
-      console.log(res);
-
-      console.log(
-        '=================================================\n',
-      );
+      console.log(res.data);
 
       toast.success('Post published successfully.');
 

@@ -38,10 +38,28 @@ export async function fetchDraft() {
 }
 
 // export async function publishPost(draft: PostDraft) {
-export async function publishPost(draft: PostDraftM) {
-  const res = await axiosInstance.post('/api/posts/upload', {
-    content: draft.content,
-    media: draft.media,
+// export async function publishPost(draft: PostDraftM) {
+//   const res = await axiosInstance.post('/api/posts/upload', {
+//     content: draft.content,
+//     media: draft.media,
+//   });
+
+//   return res.data;
+// }
+
+export async function publishPost(content: string, media: File[]) {
+  const formData = new FormData();
+
+  formData.append('content', content);
+
+  media.forEach((file) => {
+    formData.append('media', file);
+  });
+
+  const res = await axiosInstance.post('/api/posts', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
   });
 
   return res.data;

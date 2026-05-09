@@ -19,6 +19,7 @@ import {
   FacebookIcon,
   GoogleIcon,
 } from '../ui/oauth_icons';
+import { facebookLogin, googleLogin } from './oauth-login';
 
 type FormValues = SignupPayload & {
   confirmPassword: string;
@@ -32,8 +33,11 @@ export default function SignupForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({ resolver: zodResolver(signupSchema) });
+    formState: { errors, isValid },
+  } = useForm<FormValues>({
+    resolver: zodResolver(signupSchema),
+    mode: 'all',
+  });
 
   async function onSubmit(values: SignupPayload) {
     setIsSubmitting(true);
@@ -56,6 +60,34 @@ export default function SignupForm() {
       setIsSubmitting(false);
     }
   }
+
+  const handleGoogleLogin = async () => {
+    try {
+      const data = await googleLogin();
+
+      console.log(data);
+
+      toast.success(
+        'Account created successfully. Redirecting to dashboard.',
+      );
+      router.push('/dashboard');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    try {
+      const res = await facebookLogin();
+
+      if (res.user) {
+        toast.success('Welcome back! Redirecting to dashboard.');
+        router.push('/dashboard');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <AuthShell>
@@ -135,22 +167,10 @@ export default function SignupForm() {
               </p>
             )}
           </div>
-          <div>
-            <Input
-              id="confirmPassword"
-              type="password"
-              placeholder="Confirm password"
-              {...register('confirmPassword')}
-            />
-            {errors.confirmPassword && (
-              <p className="mt-2 text-sm text-rose-400">
-                {errors.confirmPassword.message}
-              </p>
-            )}
-          </div>
+
           <Button
             type="submit"
-            disabled={isSubmitting}
+            disabled={!isValid || isSubmitting}
             className="w-full"
           >
             {isSubmitting ? 'Creating account…' : 'Sign up'}
@@ -161,8 +181,9 @@ export default function SignupForm() {
           <p className="text-center text-sm uppercase tracking-[0.24em] text-slate-500">
             or continue with
           </p>
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             <Button
+              onClick={handleGoogleLogin}
               type="button"
               variant="outline"
               className="h-12 rounded-xl border-slate-200 bg-white hover:bg-slate-50"
@@ -170,15 +191,16 @@ export default function SignupForm() {
               <GoogleIcon />
             </Button>
 
-            <Button
+            {/* <Button
               type="button"
               variant="outline"
               className="h-12 rounded-xl border-slate-200 bg-white hover:bg-slate-50"
             >
               <AppleIcon />
-            </Button>
+            </Button> */}
 
             <Button
+              onClick={handleFacebookLogin}
               type="button"
               variant="outline"
               className="h-12 rounded-xl border-slate-200 bg-white hover:bg-slate-50"

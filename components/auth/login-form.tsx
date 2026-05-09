@@ -19,6 +19,7 @@ import {
   FacebookIcon,
   GoogleIcon,
 } from '../ui/oauth_icons';
+import { facebookLogin, googleLogin } from './oauth-login';
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -28,9 +29,10 @@ export default function LoginForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<AuthCredentials>({
     resolver: zodResolver(loginSchema),
+    mode: 'all',
   });
 
   async function onSubmit(values: AuthCredentials) {
@@ -45,6 +47,31 @@ export default function LoginForm() {
       setIsSubmitting(false);
     }
   }
+
+  const handleGoogleLogin = async () => {
+    try {
+      const res = await googleLogin();
+
+      if (res.user) {
+        toast.success('Welcome back! Redirecting to dashboard.');
+        router.push('/dashboard');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleFacebookLogin = async () => {
+    try {
+      const res = await facebookLogin();
+
+      if (res.user) {
+        toast.success('Welcome back! Redirecting to dashboard.');
+        router.push('/dashboard');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <AuthShell>
@@ -110,7 +137,7 @@ export default function LoginForm() {
 
           <Button
             type="submit"
-            disabled={isSubmitting}
+            disabled={!isValid || isSubmitting}
             className="w-full"
           >
             {isSubmitting ? 'Signing in…' : 'Log in'}
@@ -121,8 +148,9 @@ export default function LoginForm() {
           <p className="text-center text-sm uppercase tracking-[0.24em] text-slate-500">
             or continue with
           </p>
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             <Button
+              onClick={handleGoogleLogin}
               type="button"
               variant="outline"
               className="h-12 rounded-xl border-slate-200 bg-white hover:bg-slate-50"
@@ -130,15 +158,16 @@ export default function LoginForm() {
               <GoogleIcon />
             </Button>
 
-            <Button
+            {/* <Button
               type="button"
               variant="outline"
               className="h-12 rounded-xl border-slate-200 bg-white hover:bg-slate-50"
             >
               <AppleIcon />
-            </Button>
+            </Button> */}
 
             <Button
+              onClick={handleFacebookLogin}
               type="button"
               variant="outline"
               className="h-12 rounded-xl border-slate-200 bg-white hover:bg-slate-50"

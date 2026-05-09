@@ -14,30 +14,31 @@ export type PostDraft = {
   media: MediaAsset[];
   isDraft: boolean;
 };
-export interface MediaItem {
-  id: string;
-  fileId: string;
+// export interface MediaItem {
+//   id: string;
+//   fileId: string;
 
-  url: string;
+//   url: string;
 
-  thumbnailUrl?: string;
+//   thumbnailUrl?: string;
 
-  type: 'image' | 'video' | 'gif';
+//   type: 'image' | 'video' | 'gif';
 
-  width?: number;
-  height?: number;
+//   width?: number;
+//   height?: number;
 
-  size?: number;
+//   size?: number;
 
-  mimeType?: string;
+//   mimeType?: string;
 
-  provider?: 'imagekit';
-}
+//   provider?: 'imagekit';
+// }
 
 export interface PostDraftM {
   content: string;
 
-  media: MediaItem[];
+  media: MediaAsset[];
+  // media: MediaItem[];
 }
 
 export type PostPreview = {

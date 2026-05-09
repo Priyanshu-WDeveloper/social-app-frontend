@@ -5,7 +5,7 @@ import type { PropsWithChildren } from 'react';
 export default function AuthShell({ children }: PropsWithChildren) {
   return (
     <main className="min-h-screen text-slate-100">
-      <div className="mx-auto flex min-h-screen max-w-[1600px] flex-col lg:flex-row">
+      <div className="mx-auto flex min-h-screen flex-col lg:flex-row">
         <section className="relative flex flex-1 flex-col justify-between overflow-hidden bg-gradient-to-br from-violet-950 via-slate-950 to-slate-900 p-8 text-white lg:min-h-screen lg:px-16">
           <div className="absolute inset-0 opacity-40 blur-3xl bg-[radial-gradient(circle_at_top,_rgba(124,58,237,0.45),_transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(139,92,246,0.16),_transparent_18%)]" />
           <div className="relative z-10 flex max-w-md flex-col gap-6">
